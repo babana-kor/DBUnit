@@ -1,0 +1,10 @@
+<!ELEMENT dataset (
+    branch*)>
+
+<!ELEMENT branch EMPTY>
+<!ATTLIST branch
+    branchCode CDATA #REQUIRED
+    branchName CDATA #REQUIRED
+    branchSale CDATA #IMPLIED
+>
+

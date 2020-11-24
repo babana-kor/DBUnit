@@ -8,8 +8,10 @@
 	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="lib/jstl-1.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.24-bin.jar" sourcepath="C:/Users/BABA~1.KAO/AppData/Local/Temp/.org.sf.feeling.decompiler1605094735303/source/mysql-connector-java-5.1.24-sources.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.24-bin.jar" sourcepath="C:/Users/BABA~1.KAO/AppData/Local/Temp/.org.sf.feeling.decompiler1605267782710/source/mysql-connector-java-5.1.24-sources-1605275758057.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-2.0.0-alpha1.jar"/>
 	<classpathentry kind="lib" path="lib/standard-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.11-20141221.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

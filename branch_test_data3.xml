@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!DOCTYPE dataset SYSTEM "test.dtd">
 <dataset>
 
-<branch   branchCode="001"
-          branchName="札幌支店"
-          branchSale="3000" />
-<branch   branchCode="002"
-          branchName="北極支店"
-          branchSale="5000" />
+<branch_sale_out   branch_code="001"
+          branch_name="札幌支店"
+          branch_sale="13000" />
+<branch_sale_out   branch_code="002"
+          branch_name="北極支店"
+          branch_sale="7000" />
+<branch_sale_out   branch_code="003"
+          branch_name="南極支店"
+          branch_sale="13000" />
 </dataset>

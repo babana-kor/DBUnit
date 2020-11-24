@@ -6,41 +6,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
 
+import beans.Branch;
+
 public class Sample {
-
-	//beans部分
-	private String branchCode;
-	private String branchName;
-	private long branchSale;
-
-	public String getBranchCode() {
-		return branchCode;
-	}
-
-	public void setBranchCode(String branchCode) {
-		this.branchCode = branchCode;
-	}
-
-	public String getBranchName() {
-		return branchName;
-	}
-
-	public void setBranchName(String branchName) {
-		this.branchName = branchName;
-	}
-
-	public long getBranchSale() {
-		return branchSale;
-	}
-
-	public void setBranchSale(long branchSale) {
-		this.branchSale = branchSale;
-	}
 
 	private static final String DRIVER = "com.mysql.jdbc.Driver";
 	private static final String URL = "jdbc:mysql://localhost/test";
@@ -62,70 +37,113 @@ public class Sample {
 		return connection;
 	}
 
-    public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-        // データベースに接続する。
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection jdbcConnection = DriverManager.getConnection(URL, USER, PASSWORD);
-        IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
+		// データベースに接続する。
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection jdbcConnection = DriverManager.getConnection(URL, USER, PASSWORD);
+		IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
 
-        // Dtdファイルを作成する
-        FlatDtdDataSet.write(connection.createDataSet(),
-                             new FileOutputStream("test.dtd"));
-     }
+		// Dtdファイルを作成する
+		FlatDtdDataSet.write(connection.createDataSet(),
+				new FileOutputStream("test.dtd"));
+	}
+
+	//	//DB参照メソッド
+	//	public Branch load(String code, String name) throws Exception {
+	//
+	//		Branch resultBranch = new Branch();
+	//
+	//		Connection connection = null;
+	//		try {
+	//			connection = getConnection();
+	//			String sql = "SELECT * FROM branch WHERE branchCode = ? AND branchName = ?";
+	//
+	//			PreparedStatement ps = connection.prepareStatement(sql);
+	//			ps.setString(1, code);
+	//			ps.setString(2, name);
+	//			ResultSet result = ps.executeQuery();
+	//
+	//			if (result.next()) {
+	//				resultBranch.setBranchCode(result.getString("branchCode"));
+	//				resultBranch.setBranchName(result.getString("branchName"));
+	//				resultBranch.setBranchSale(result.getLong("branchSale"));
+	//			}
+	//
+	//		} finally {
+	//			if (connection != null)
+	//				connection.close();
+	//
+	//		}
+	//		return resultBranch;
+	//
+	//	}
 
 	//DB参照メソッド
-	public void load(String code, String name) throws Exception {
+	public static List<Branch> allBranch() throws Exception {
 
 		Connection connection = null;
+		List<Branch> branchesList = new ArrayList<Branch>();
+
 		try {
 			connection = getConnection();
-			String sql = "SELECT * FROM branch WHERE branchCode = ? AND branchName = ?";
-
+			String sql = "SELECT * FROM branch";
 			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setString(1, code);
-			ps.setString(2, name);
+
 			ResultSet result = ps.executeQuery();
 
-			if (result.next()) {
-				this.branchCode = result.getString("branchCode");
-				this.branchName = result.getString("branchName");
-				this.branchSale = result.getLong("branchSale");
+			while (result.next()) {
+				Branch branch = new Branch();
+				branch.setBranchCode(result.getString("branch_code"));
+				branch.setBranchName(result.getString("branch_name"));
+
+				branchesList.add(branch);
 			}
 
 		} finally {
 			if (connection != null)
 				connection.close();
 		}
+		return branchesList;
 
 	}
 
 	//DB更新メソッド
-	public void store() throws Exception {
+	public static boolean updataBranch(List<Branch> resultBranchList) throws Exception {
 
 		Connection connection = null;
-		try {
-			connection = getConnection();
-			String sql = "INSERT INTO branch values(?,?,?)";
 
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setString(1, this.branchCode);
-			ps.setString(2, this.branchName);
-			ps.setLong(3, this.branchSale);
+		for (int i = 0; i < resultBranchList.size(); i++) {
 
-			ps.executeUpdate();
+			Branch branch = resultBranchList.get(i);
 
-			//Can't call commit when autocommit=true
-			//connection.commit();
-
-		} finally {
 			try {
-				if (connection != null) {
-					connection.close();
+				connection = getConnection();
+				StringBuilder sql = new StringBuilder();
+				sql.append("REPLACE branch_sale_out SET branch_code = ?, branch_name = ?, branch_sale = ?;");
+
+				PreparedStatement ps = connection.prepareStatement(sql.toString());
+
+				ps.setString(1, branch.getBranchCode());
+				ps.setString(2, branch.getBranchName());
+				ps.setLong(3, branch.getBranchSale());
+
+				ps.executeUpdate();
+
+				//Can't call commit when autocommit=true
+				//connection.commit();
+
+			} finally {
+				try {
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					return false;
 				}
-			} catch (SQLException e) {
 			}
 		}
+		return true;
 
 	}
 

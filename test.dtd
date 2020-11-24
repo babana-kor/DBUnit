@@ -1,10 +1,17 @@
 <!ELEMENT dataset (
-    branch*)>
+    branch*,
+    branch_sale_out*)>
 
 <!ELEMENT branch EMPTY>
 <!ATTLIST branch
-    branchCode CDATA #REQUIRED
-    branchName CDATA #REQUIRED
-    branchSale CDATA #IMPLIED
+    branch_code CDATA #REQUIRED
+    branch_name CDATA #REQUIRED
+>
+
+<!ELEMENT branch_sale_out EMPTY>
+<!ATTLIST branch_sale_out
+    branch_code CDATA #REQUIRED
+    branch_name CDATA #REQUIRED
+    branch_sale CDATA #IMPLIED
 >
 
